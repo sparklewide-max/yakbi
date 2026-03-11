@@ -1,221 +1,86 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>약BTI 검사</title>
-
-<meta property="og:title" content="약BTI 검사 X 바로팜">
-<meta property="og:description" content="바로팜과 함께하는 약BTI 검사! 나는 어떤 약사일까요?">
-<meta property="og:image" content="https://via.placeholder.com/300">
-
-<style>
-*{box-sizing:border-box;}
-body{
-margin:0;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-background:#f3f6fb;
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
-padding:20px;
-}
-
-.card{
-width:100%;
-max-width:520px;
-background:#fff;
-padding:24px;
-border-radius:20px;
-box-shadow:0 15px 40px rgba(0,0,0,0.08);
-}
-
-.hidden{display:none;}
-
-button{
-width:100%;
-padding:14px;
-margin-top:12px;
-border:none;
-border-radius:12px;
-font-size:15px;
-cursor:pointer;
-}
-
-.primary{background:#2563eb;color:white;}
-.gray{background:#e5e7eb;}
-
-.match-grid{
-display:grid;
-grid-template-columns:1fr;
-gap:12px;
-margin-top:12px;
-}
-
-@media(min-width:768px){
-.match-grid{
-grid-template-columns:1fr 1fr;
-}
-}
-
-.modal{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.6);
-display:flex;
-justify-content:center;
-align-items:center;
-}
-
-.modal-content{
-background:white;
-width:90%;
-max-width:600px;
-border-radius:16px;
-padding:20px;
-max-height:80vh;
-overflow:auto;
-}
-</style>
-</head>
-
-<body>
-
-<!-- TEST -->
-<div id="test" class="card">
-<h2 id="question"></h2>
-<div id="answers"></div>
-</div>
-
-<!-- RESULT -->
-<div id="result" class="card hidden">
-<h1 id="type"></h1>
-<h3 id="titleText"></h3>
-<p id="desc"></p>
-
-<hr>
-
-<h3>👥 나와 잘 맞는 직원은?</h3>
-<div class="match-grid">
-<div>
-<strong>👍 잘 맞음</strong>
-<p id="good"></p>
-</div>
-<div>
-<strong>⚠ 안 맞음</strong>
-<p id="bad"></p>
-</div>
-</div>
-
-<button class="primary" onclick="window.open('https://open.pharmallplus.com/')">
-나에게 맞는 매물 보기
-</button>
-
-<button class="gray" onclick="share()">결과 공유하기</button>
-<button class="gray" onclick="restart()">다시 테스트하기</button>
-<button class="gray" onclick="openModal()">모든 결과 유형 보기</button>
-</div>
-
-<!-- MODAL -->
-<div id="modal" class="modal hidden">
-<div class="modal-content">
-<h3>전체 MBTI 유형</h3>
-<div id="mbtiList"></div>
-<button class="gray" onclick="closeModal()">닫기</button>
-</div>
-</div>
-
 <script>
-const questions=[
-{q:"약국이 바쁜 날, 당신의 에너지는?",a:["대화하면 충전","혼자 재충전"],t:["E","I"]},
-{q:"신약 정보를 접하면?",a:["미래 변화 생각","구체 정보 확인"],t:["N","S"]},
-{q:"환자 응대 스타일은?",a:["데이터 중심","공감 중심"],t:["T","F"]},
-{q:"업무 처리 방식은?",a:["유연하게","계획적으로"],t:["P","J"]}
-];
+/* ================================
+   🔥 안정화 패치 버전
+   ================================ */
 
-let step=0;
-let score={E:0,I:0,N:0,S:0,T:0,F:0,P:0,J:0};
+function scrollTopInstant() {
+  window.scrollTo({
+    top: 0,
+    behavior: "auto"
+  });
+}
 
-function render(){
-document.getElementById("question").innerText=questions[step].q;
-let area=document.getElementById("answers");
-area.innerHTML="";
-questions[step].a.forEach((text,i)=>{
-let btn=document.createElement("button");
-btn.className="primary";
-btn.innerText=text;
-btn.onclick=()=>select(questions[step].t[i]);
-area.appendChild(btn);
+/* ================================
+   시작 버튼
+   ================================ */
+
+function startTest() {
+  const intro = document.getElementById("intro");
+  const test = document.getElementById("test");
+  const loading = document.getElementById("loading");
+  const result = document.getElementById("result");
+
+  if (intro) intro.style.display = "none";
+  if (loading) loading.style.display = "none";
+  if (result) result.style.display = "none";
+  if (test) test.style.display = "block";
+
+  scrollTopInstant();
+}
+
+/* ================================
+   로딩 화면
+   ================================ */
+
+function showLoading() {
+  const test = document.getElementById("test");
+  const loading = document.getElementById("loading");
+
+  if (test) test.style.display = "none";
+  if (loading) loading.style.display = "block";
+
+  scrollTopInstant();
+}
+
+/* ================================
+   결과 화면
+   ================================ */
+
+function showResult() {
+  const test = document.getElementById("test");
+  const loading = document.getElementById("loading");
+  const result = document.getElementById("result");
+
+  if (loading) loading.style.display = "none";
+  if (test) test.style.display = "none";
+  if (result) result.style.display = "block";
+
+  scrollTopInstant();
+}
+
+/* ================================
+   분석 로직 끝났을 때 반드시 호출
+   ================================ */
+
+function finishAnalysis() {
+  showResult();
+}
+
+/* ================================
+   페이지 로드시 안전 초기화
+   ================================ */
+
+window.addEventListener("load", function () {
+  const intro = document.getElementById("intro");
+  const test = document.getElementById("test");
+  const loading = document.getElementById("loading");
+  const result = document.getElementById("result");
+
+  if (intro) intro.style.display = "block";
+  if (test) test.style.display = "none";
+  if (loading) loading.style.display = "none";
+  if (result) result.style.display = "none";
+
+  scrollTopInstant();
 });
-}
-
-function select(type){
-score[type]++;
-step++;
-if(step<questions.length){
-render();
-}else{
-showResult();
-}
-}
-
-function showResult(){
-document.getElementById("test").classList.add("hidden");
-document.getElementById("result").classList.remove("hidden");
-
-let result=
-(score.E>=score.I?"E":"I")+
-(score.N>=score.S?"N":"S")+
-(score.T>=score.F?"T":"F")+
-(score.P>=score.J?"P":"J");
-
-document.getElementById("type").innerText=result;
-document.getElementById("titleText").innerText="약국형 "+result+" 약사";
-document.getElementById("desc").innerText="이 유형은 약국 운영에서 강점을 발휘합니다.";
-document.getElementById("good").innerText="ENFP, ESFP";
-document.getElementById("bad").innerText="INTJ, ISTJ";
-
-generateList();
-}
-
-function share(){
-navigator.clipboard.writeText(window.location.href);
-alert("링크가 복사되었습니다.");
-}
-
-function restart(){
-location.reload();
-}
-
-function openModal(){
-document.getElementById("modal").classList.remove("hidden");
-}
-
-function closeModal(){
-document.getElementById("modal").classList.add("hidden");
-}
-
-function generateList(){
-const types=["ISTJ","ISFJ","INFJ","INTJ","ISTP","ISFP","INFP","INTP","ESTP","ESFP","ENFP","ENTJ","ESTJ","ESFJ","ENFJ","ENTP"];
-let list=document.getElementById("mbtiList");
-list.innerHTML="";
-types.forEach(t=>{
-let div=document.createElement("div");
-div.style.marginBottom="8px";
-div.style.padding="8px";
-div.style.background="#f1f5f9";
-div.style.borderRadius="8px";
-div.innerText=t;
-list.appendChild(div);
-});
-}
-
-render();
 </script>
-
-</body>
-</html>

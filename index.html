@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>약BTI 검사</title>
+
+  <meta property="og:title" content="약BTI 검사 X 바로팜">
+  <meta property="og:description" content="바로팜과 함께하는 약BTI 검사! 나는 어떤 약사일까요?">
+  <meta property="og:image" content="https://via.placeholder.com/300">
+
+  <style>
+    body { font-family: sans-serif; padding: 40px; background:#f5f7fa;}
+    .card { background:white; padding:20px; border-radius:12px; max-width:600px; margin:auto; box-shadow:0 10px 20px rgba(0,0,0,0.1);}
+    button { padding:12px; margin-top:10px; width:100%; border-radius:8px; border:none; cursor:pointer;}
+    .primary { background:#2563eb; color:white;}
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h1>ISTJ</h1>
+  <h2>원칙주의 조제 마스터</h2>
+  <p>정확함과 안정성을 중시하는 약사</p>
+
+  <hr>
+
+  <h3>👥 나와 잘 맞는 직원은?</h3>
+  <p>✔ ESFP - 환자 응대 보완</p>
+  <p>✔ ENFP - 확장 기획 보완</p>
+
+  <hr>
+
+  <button class="primary" onclick="window.open('https://open.pharmallplus.com/')">
+    나에게 맞는 매물 보기
+  </button>
+
+  <button onclick="share()">결과 공유하기</button>
+
+  <button onclick="location.reload()">다시 테스트하기</button>
+</div>
+
+<script>
+function share(){
+  navigator.clipboard.writeText(window.location.href);
+  alert("링크가 복사되었습니다.");
+}
+</script>
+
+</body>
+</html>
